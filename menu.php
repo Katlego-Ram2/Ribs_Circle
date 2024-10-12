@@ -22,13 +22,19 @@
                         <a href="./Menu/Dagwood_Menu/dagwood_menu.php">Dagwood Menu</a>
                         <a href="./Menu/Chicken_Menu/chickenmenu.php">Chicken Menu</a>
                         <a href="./Menu/Ribs_Menu/Ribs.php">Ribs Menu</a>
+                       
                     </div>
                 </li>
                 <li><a href="gallery.php">Gallery</a></li>
-                <li><a href="./Register/signup.php">Sign Up</a></li>
+                <li>
+             <a href="./Cart/cart.php">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count" style="color: orange;">0</span> <!-- This span will display the item count -->
+    </a>
+</li>
             </ul>
             <ul>
-                <li class="sign-in"><a href="sign-in.php">Sign In</a></li>
+              
             </ul>
         </nav>
         <div class="content">
@@ -140,4 +146,79 @@
         </div>
     </footer>
 </body>
+<script>
+   // Array to hold selected items
+   let selectedItems = JSON.parse(localStorage.getItem('cart')) || [];
+let totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+// Function to add item to the order
+function addItemToOrder(id, description, price) {
+    // Check if the item already exists in the selectedItems array
+    const existingItemIndex = selectedItems.findIndex(item => item.id === id);
+    
+    if (existingItemIndex !== -1) {
+        // If it exists, increment the quantity
+        selectedItems[existingItemIndex].quantity += 1;
+    } else {
+        // If it doesn't exist, add a new item
+        selectedItems.push({ id, description, price, quantity: 1 });
+    }
+
+    // Update total price
+    totalPrice += price;
+
+    // Save updated items to localStorage
+    localStorage.setItem('cart', JSON.stringify(selectedItems));
+
+    // Update cart count display
+    updateCartCount();
+
+    // Display the updated order details in the console
+    displaySelectedItems();
+    alert("Item added to the Cart")
+}
+
+// Function to display selected items and total price
+function displaySelectedItems() {
+    console.clear(); // Optional: clear the console for better visibility
+    console.log("Selected Items:");
+    
+    selectedItems.forEach(item => {
+        console.log(`- ${item.description} (Quantity: ${item.quantity}): R${(item.price * item.quantity).toFixed(2)}`);
+    });
+    
+    console.log(`Total Price: R${totalPrice.toFixed(2)}`);
+}
+
+// Function to update the cart count display
+function updateCartCount() {
+    const totalCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').innerText = totalCount;
+}
+
+// Modify fetchItemDetails to call addItemToOrder with the fetched details
+function fetchItemDetails(id) {
+    fetch(`get_item.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Call addItemToOrder with the fetched details
+                addItemToOrder(id, data.description, parseFloat(data.price));
+            } else {
+                console.error(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching item details:', error);
+        });
+}
+
+// On page load, update the cart count and display existing selected items
+window.onload = () => {
+    updateCartCount();
+    displaySelectedItems();
+};
+
+
+    </script>
 </html>
