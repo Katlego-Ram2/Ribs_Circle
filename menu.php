@@ -16,12 +16,19 @@
             </div>
             <ul>
                 <li><a href="#">Home</a></li>
-               
-                
-                <li><a href="./Register/register.php">Sign Up</a></li>
+                <li class="menu-dropdown">
+                    <a>Menu</a>
+                    <div class="dropdown">
+                        <a href="./Menu/Dagwood_Menu/dagwood_menu.php">Dagwood Menu</a>
+                        <a href="./Menu/Chicken_Menu/chickenmenu.php">Chicken Menu</a>
+                        <a href="./Menu/Ribs_Menu/Ribs.php">Ribs Menu</a>
+                    </div>
+                </li>
+                <li><a href="gallery.php">Gallery</a></li>
+                <li><a href="./Register/signup.php">Sign Up</a></li>
             </ul>
             <ul>
-                <li class="sign-in"><a href="./login/login.php">Sign In To Order</a></li>
+                <li class="sign-in"><a href="sign-in.php">Sign In</a></li>
             </ul>
         </nav>
         <div class="content">
